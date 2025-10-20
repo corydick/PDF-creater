@@ -1,52 +1,50 @@
-const imageInput = document.getElementById('imageInput');
-const previewImg = document.getElementById('previewImg');
-const createPdfBtn = document.getElementById('createPdfBtn');
-let imageFile = null;
+const { jsPDF } = window.jspdf;
+const imageInput = document.getElementById("imageInput");
+const preview = document.getElementById("preview");
+const convertBtn = document.getElementById("convertBtn");
 
-imageInput.addEventListener('change', (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    imageFile = file;
-    const url = URL.createObjectURL(file);
-    previewImg.src = url;
-    previewImg.style.display = 'block';
-    createPdfBtn.disabled = false;
-  }
-});
+let images = [];
 
-createPdfBtn.addEventListener('click', async () => {
-  if (!imageFile) return;
-
-  const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF({
-    orientation: 'portrait',
-    unit: 'mm',
-    format: 'a4'
+// Handle file selection
+imageInput.addEventListener("change", (e) => {
+  images = Array.from(e.target.files);
+  preview.innerHTML = "";
+  images.forEach(file => {
+    const img = document.createElement("img");
+    img.classList.add("preview-image");
+    img.src = URL.createObjectURL(file);
+    preview.appendChild(img);
   });
-
-  const imgData = await fileToBase64(imageFile);
-
-  const img = new Image();
-  img.src = imgData;
-  img.onload = () => {
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
-
-    const ratio = Math.min(pageWidth / img.width, pageHeight / img.height);
-    const imgWidth = img.width * ratio;
-    const imgHeight = img.height * ratio;
-    const x = (pageWidth - imgWidth) / 2;
-    const y = (pageHeight - imgHeight) / 2;
-
-    pdf.addImage(imgData, 'JPEG', x, y, imgWidth, imgHeight);
-
-    const pdfBlob = pdf.output('blob');
-    const pdfURL = URL.createObjectURL(pdfBlob);
-    window.open(pdfURL, '_blank');
-  };
+  convertBtn.disabled = images.length === 0;
 });
 
-function fileToBase64(file) {
+// Convert images to PDF
+convertBtn.addEventListener("click", async () => {
+  if (images.length === 0) return;
+  const pdf = new jsPDF();
+
+  for (let i = 0; i < images.length; i++) {
+    const file = images[i];
+    const imgData = await toBase64(file);
+    const img = new Image();
+    img.src = imgData;
+    await new Promise(resolve => img.onload = resolve);
+
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (img.height * pdfWidth) / img.width;
+
+    if (i > 0) pdf.addPage();
+    pdf.addImage(img, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+  }
+
+  // ✅ Instead of saving, open preview in Safari
+  const pdfBlob = pdf.output('blob');
+  const pdfURL = URL.createObjectURL(pdfBlob);
+  window.open(pdfURL, '_blank');
+});
+
+// Helper function
+function toBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve(reader.result);

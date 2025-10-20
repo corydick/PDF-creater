@@ -14,10 +14,9 @@ input[type="file"] {
   margin: 20px 0;
 }
 
-#previewImg {
+#preview img {
   max-width: 90%;
   margin-top: 10px;
-  display: none;
   border-radius: 8px;
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.15);
 }

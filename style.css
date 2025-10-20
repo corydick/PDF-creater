@@ -1,0 +1,38 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  padding: 20px;
+  text-align: center;
+  background: #f5f5f7;
+}
+
+h2 {
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+input[type="file"] {
+  margin: 20px 0;
+}
+
+#previewImg {
+  max-width: 90%;
+  margin-top: 10px;
+  display: none;
+  border-radius: 8px;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.15);
+}
+
+button {
+  padding: 12px 20px;
+  font-size: 16px;
+  background-color: #007aff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}

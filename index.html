@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Picture to PDF</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
@@ -12,10 +12,11 @@
 
   <input type="file" id="imageInput" accept="image/*">
   <br>
-  <img id="previewImg" alt="Preview" />
+  <div id="preview"></div>
   <br>
-  <button id="createPdfBtn" disabled>Create PDF</button>
+  <button id="convertBtn" disabled>Create PDF</button>
 
-  <script src="script.js"></script>
+  <!-- 👇 Make sure this is at the bottom -->
+  <script src="script.js" type="text/javascript"></script>
 </body>
 </html>
